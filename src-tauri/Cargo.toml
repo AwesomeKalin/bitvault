@@ -1,8 +1,8 @@
 [package]
 name = "bitvault"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "The Private Wallet for your BSV, BSV20/21 Tokens, and 1SatOrdinals"
+authors = ["Octagon Crypto"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -22,4 +22,5 @@ tauri = { version = "2", features = [] }
 tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tauri-plugin-clipboard-manager = "2.0.2"
 
