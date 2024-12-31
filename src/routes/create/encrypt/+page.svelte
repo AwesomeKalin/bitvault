@@ -18,8 +18,7 @@
 		const iv: Buffer = crypto.randomBytes(16);
 		const cipher: crypto.Cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
         //@ts-expect-error
-		let encrypted: Buffer | string = cipher.update(getData()?.seed, 'utf8', 'hex');
-		encrypted = cipher.final('hex');
+		let encrypted: string = cipher.update(getData()?.seed, 'utf8', 'hex') + cipher.final('hex');
 
         const newData: WalletData = {
             seed: encrypted,

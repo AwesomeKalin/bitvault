@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from "$app/navigation";
 	import { heading1, primaryButton } from "$lib/classes";
 	import { getData, setSeed } from "$lib/runes.svelte";
 	import type { WalletData } from "$lib/types";
@@ -10,12 +11,14 @@
         //@ts-expect-error Data checked if undefined before redirecting to this page
         const walletData: WalletData = getData();
 
-        const key: Buffer = crypto.pbkdf2Sync(password, walletData.salt, 100000, 32, 'sha256');
+        const key: Buffer = crypto.pbkdf2Sync(password, Buffer.from(walletData.salt, 'hex'), 100000, 32, 'sha256');
 
-        const decipher: crypto.Decipher = crypto.createDecipheriv('aes-256-cbc', key, walletData.iv);
-        decipher.update(Buffer.from(walletData.seed, 'hex'));
+        const decipher: crypto.Decipher = crypto.createDecipheriv('aes-256-cbc', key, Buffer.from(walletData.iv, 'hex'));
+        let decrypted: string = decipher.update(walletData.seed, 'hex', 'utf8') + decipher.final('utf8');
 
-        setSeed(decipher.final('utf8'));
+        setSeed(decrypted);
+
+        goto('/wallet');
     }
 </script>
 
