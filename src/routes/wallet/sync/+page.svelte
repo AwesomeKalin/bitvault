@@ -26,18 +26,22 @@
 
 		spv.events.on('syncedBlockHeight', (blockno: number) => {
 			height = blockno;
-		});
-
-		$effect(() => {
 			if (height >= finalHeight) {
-				spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
-					height = blockno;
-				});
-
-				goto('/wallet');
+				finishSync();
 			}
 		});
 	});
+
+	function finishSync() {
+		spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
+			height = blockno;
+			if (height >= finalHeight) {
+				finishSync();
+			}
+		});
+
+		goto('/wallet');
+	}
 </script>
 
 <h1 class={heading1}>Syncronising block headers</h1>
