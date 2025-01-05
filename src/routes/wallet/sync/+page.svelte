@@ -18,9 +18,9 @@
 
 		spv = getSPV(checkWallet);
 
-		spv.sync();
-
 		const chainTip: BlockHeader | undefined = await spv.getChaintip();
+
+		spv.sync();
 
 		finalHeight = chainTip?.height ?? 0;
 
@@ -29,14 +29,14 @@
 		});
 	});
 
-    $effect(() => {
-        if (height >= finalHeight) {
+	$effect(() => {
+		if (height >= finalHeight) {
 			spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
 				height = blockno;
 			});
-            goto('/wallet');
-        }
-    });
+			goto('/wallet');
+		}
+	});
 </script>
 
 <h1 class={heading1}>Syncronising block headers</h1>
