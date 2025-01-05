@@ -27,6 +27,8 @@
 		spv.events.on('syncedBlockHeight', (blockno: number) => {
 			height = blockno;
 		});
+
+		height = 1;
 	});
 
 	$effect(() => {
@@ -34,7 +36,8 @@
 			spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
 				height = blockno;
 			});
-			height = 100000000000;
+
+			height = 1000000000;
 		}
 	});
 </script>
