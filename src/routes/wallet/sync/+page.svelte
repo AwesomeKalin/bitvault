@@ -34,7 +34,6 @@
 			spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
 				height = blockno;
 			});
-			goto('/wallet');
 		}
 	});
 </script>
