@@ -28,17 +28,15 @@
 			height = blockno;
 		});
 
-		height = 1;
-	});
+		$effect(() => {
+			if (height >= finalHeight) {
+				spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
+					height = blockno;
+				});
 
-	$effect(() => {
-		if (height >= finalHeight) {
-			spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
-				height = blockno;
-			});
-
-			height = 1000000000;
-		}
+				goto('/wallet');
+			}
+		});
 	});
 </script>
 
