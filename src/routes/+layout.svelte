@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getData } from '$lib/runes.svelte';
+	import '../tauriFetch';
 	import '../app.css';
 	let { children } = $props();
 
