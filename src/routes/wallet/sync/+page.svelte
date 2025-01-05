@@ -24,7 +24,6 @@
 
 		finalHeight = chainTip?.height ?? 0;
 
-		console.log(JSON.stringify(chainTip));
 		spv.events.on('syncedBlockHeight', (blockno: number) => {
 			height = blockno;
 		});
