@@ -3,8 +3,8 @@
 	import { HD, Mnemonic } from '@bsv/sdk';
 	import type { OneSatWebSPV, BlockHeader } from 'spv-store';
 	import { onMount } from 'svelte';
-	import { getSeed } from '../../../lib/runes.svelte';
-	import { createSPVFunds, getSPV } from '../../../lib/spv-store';
+	import { getSeed } from '$lib/runes.svelte';
+	import { createSPVFunds, getSPV } from '$lib/spv-store';
 	import { goto } from '$app/navigation';
 
 	let height: number = $state(0);
