@@ -33,13 +33,6 @@
 	});
 
 	function finishSync() {
-		spv?.events.removeListener('syncedBlockHeight', (blockno: number) => {
-			height = blockno;
-			if (height >= finalHeight) {
-				finishSync();
-			}
-		});
-
 		goto('/wallet');
 	}
 </script>
