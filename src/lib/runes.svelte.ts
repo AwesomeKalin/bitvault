@@ -3,6 +3,7 @@ import type { WalletData } from "./types";
 //@ts-expect-error
 let data: WalletData | undefined = $state(loadData());
 let seed: string = $state('');
+let spvSynced: boolean = $state(false);
 
 function loadData() {
     const d = localStorage.getItem('seed');
@@ -32,4 +33,12 @@ export function getSeed(): string {
 
 export function setSeed(s: string): void {
     seed = s;
+}
+
+export function getSpvSynced(): boolean {
+    return spvSynced;
+}
+
+export function setSpvSynced(s: boolean): void {
+    spvSynced = s;
 }

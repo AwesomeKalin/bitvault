@@ -3,7 +3,7 @@
 	import { HD, Mnemonic } from '@bsv/sdk';
 	import type { OneSatWebSPV, BlockHeader } from 'spv-store';
 	import { onMount } from 'svelte';
-	import { getSeed } from '$lib/runes.svelte';
+	import { getSeed, setSpvSynced } from '$lib/runes.svelte';
 	import { createSPVFunds, getSPV } from '$lib/spv-store';
 	import { goto } from '$app/navigation';
 
@@ -33,6 +33,7 @@
 	});
 
 	function finishSync() {
+		setSpvSynced(true);
 		goto('/wallet');
 	}
 </script>

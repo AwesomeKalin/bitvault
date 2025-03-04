@@ -7,7 +7,7 @@
         if (getData() === undefined) {
             goto('/create');
         } else {
-            goto('/wallet');
+            goto('/wallet/decrypt');
         }
     })
 </script>
