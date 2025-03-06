@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getSeed, getSpvSynced } from '$lib/runes.svelte';
-	import { HD, Mnemonic } from '@bsv/sdk';
+	import { getBSVBalance, getNextAddress } from '$lib/addresses';
+	import { getSpvSynced } from '$lib/runes.svelte';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
@@ -13,4 +13,5 @@
 	});
 </script>
 
-<p>m/44'/236'/0'/0/0 wallet address: {HD.fromSeed(new Mnemonic(getSeed()).toSeed()).derive("m/44'/236'/0'/0/0").privKey.toAddress()}</p>
+<p>Next address: {await getNextAddress()}</p>
+<p>BSV Balance: {await getBSVBalance()}</p>
