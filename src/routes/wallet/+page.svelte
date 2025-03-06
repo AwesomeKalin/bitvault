@@ -13,5 +13,14 @@
 	});
 </script>
 
-<p>Next address: {await getNextAddress()}</p>
-<p>BSV Balance: {await getBSVBalance()}</p>
+{#await getNextAddress()}
+	<p>Next address: Loading...</p>
+{:then address}
+	<p>Next address: {address}</p>
+{/await}
+
+{#await getBSVBalance()}
+	<p>BSV Balance: Loading...</p>
+{:then balance}
+	<p>BSV Balance: {balance}</p>
+{/await}
