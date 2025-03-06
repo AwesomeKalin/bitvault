@@ -4,7 +4,7 @@
 	import type { OneSatWebSPV, BlockHeader } from 'spv-store';
 	import { onMount } from 'svelte';
 	import { getSeed, setSpvSynced } from '$lib/runes.svelte';
-	import { createSPVFunds, getSPV } from '$lib/spv-store';
+	import { createSPV, getSPV } from '$lib/spv-store';
 	import { goto } from '$app/navigation';
 
 	let height: number = $state(0);
@@ -14,7 +14,7 @@
 	onMount(async () => {
 		const hdWallet = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
 		const checkWallet: string = hdWallet.derive("m/44'/236'/0'/0/0").privKey.toAddress();
-		await createSPVFunds(checkWallet);
+		await createSPV(checkWallet);
 
 		spv = getSPV(checkWallet);
 
