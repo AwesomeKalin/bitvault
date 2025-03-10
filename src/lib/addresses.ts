@@ -31,10 +31,13 @@ export async function getBSVBalance() {
         const address: string = '142dcg1Un4u6na2sR9gTgaB5QybqE4sZbT';
         createSPV(address);
         const spv = getSPV(address);
+        console.log('1');
 
         if ((await spv.getRecentTxs()).length === 0) return balance;
+        console.log('2');
 
         const txos = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
+        console.log('3');
 
         for (let i = 0; i < txos.length; i++) {
             balance += parseInt(txos[i].satoshis.toString());
