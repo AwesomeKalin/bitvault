@@ -17,6 +17,12 @@
         },
         {
           "url": "https://*.1sat.app"
+        },
+        {
+          "url": "https://*.whatsonchain.com"
+        },
+        {
+          "url": "https://*.taal.com"
         }
       ]
     }
