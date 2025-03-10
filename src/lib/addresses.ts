@@ -27,7 +27,8 @@ export async function getBSVBalance() {
     let balance: number = 0;
 
     while (true) {
-        const address: string = hdWallet.derive(`${basePath}/${nextCheck}`).privKey.toAddress();
+        //const address: string = hdWallet.derive(`${basePath}/${nextCheck}`).privKey.toAddress();
+        const address: string = '142dcg1Un4u6na2sR9gTgaB5QybqE4sZbT';
         createSPV(address);
         const spv = getSPV(address);
 
@@ -40,5 +41,7 @@ export async function getBSVBalance() {
         }
 
         nextCheck++;
+
+        return balance;
     }
 }
