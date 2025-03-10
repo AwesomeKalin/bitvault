@@ -33,6 +33,7 @@ export async function getBSVBalance() {
         const spv = getSPV(address);
         console.log('1');
 
+        console.log(await spv.getRecentTxs());
         if ((await spv.getRecentTxs()).length === 0) return balance;
         console.log('2');
 
