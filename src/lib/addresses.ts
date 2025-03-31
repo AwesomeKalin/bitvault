@@ -35,8 +35,6 @@ export async function getBSVBalance() {
 
         await spv.sync();
 
-        console.log(await spv.getRecentTxs());
-        if ((await spv.getRecentTxs()).length === 0) return balance;
         console.log('2');
 
         const txos = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
