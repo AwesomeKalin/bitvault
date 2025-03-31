@@ -1,4 +1,7 @@
+import { HD, Mnemonic } from "@bsv/sdk";
 import type { WalletData } from "./types";
+import type { OneSatWebSPV } from "spv-store";
+import { createSPV, getSPV } from "./spv-store";
 
 //@ts-expect-error
 let data: WalletData | undefined = $state(loadData());
@@ -35,8 +38,19 @@ export function setSeed(s: string): void {
     seed = s;
 }
 
-export function getSpvSynced(): boolean {
-    return spvSynced;
+export async function getSpvSynced(): Promise<boolean> {
+    const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
+    const address: string = hdWallet.derive("m/44'/236'/0'/0/0").privKey.toAddress();
+
+    let spv: OneSatWebSPV;
+    try {
+        spv = getSPV(address);
+    } catch {
+        createSPV(address);
+        spv = getSPV(address);
+    }
+
+    return (await spv.getSyncedBlock())?.height === 0;
 }
 
 export function setSpvSynced(s: boolean): void {

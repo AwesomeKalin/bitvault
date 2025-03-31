@@ -5,7 +5,7 @@
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		if (!getSpvSynced()) {
+		if (!(await getSpvSynced())) {
 			goto('/wallet/sync');
 		} else {
 			console.log('Chain tip synced');
@@ -20,7 +20,7 @@
 {/await}
 
 {#await getBSVBalance()}
-	<p>BSV Balance: Loading...</p>
+	<p>BSV Balance: Syncronising...</p>
 {:then balance}
 	<p>BSV Balance: {balance}</p>
 {/await}
