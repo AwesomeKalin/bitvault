@@ -18,7 +18,7 @@ export async function createSPV(address: string): Promise<void> {
             new OriginIndexer(owners, 'mainnet'),
         ];
 
-        spvProviders.set(address, await OneSatWebSPV.init(address, indexers, owners));
+        spvProviders.set(address, await OneSatWebSPV.init(`${address}-bitvault`, indexers, owners));
     }
 }
 
