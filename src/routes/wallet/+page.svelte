@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getBSVBalance, getNextAddress, getUSDBalance } from '$lib/addresses';
+	import { getBSVBalance, getUSDBalance } from '$lib/addresses';
 	import { heading1, heading3, primaryButton } from '$lib/classes';
 	import { getSpvSynced } from '$lib/runes.svelte';
 	import { onMount } from 'svelte';

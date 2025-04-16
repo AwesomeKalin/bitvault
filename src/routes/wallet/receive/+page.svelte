@@ -3,8 +3,7 @@
 	import { heading1, heading3, secondaryButton } from "$lib/classes";
     import QrCode from "qrcode";
 
-    //@ts-expect-error Should work
-    async function getAddress(): Promise<{ address: string; url: string }> {
+    async function getAddress(): Promise<string> {
         const address: string = await getNextAddress();
         let qrcode: string;
         QrCode.toDataURL(address, function (err: any, url: string) {
@@ -13,24 +12,21 @@
                 return;
             }
 
-            return { address, url };
+            document.getElementById("qrcode")?.setAttribute("src", url);
         });
+
+        return address;
     }
 </script>
 
-<!--{#await getNextAddress()}
-	<p>Next address: Loading...</p>
-{:then address}
-	<p>Next address: {address}</p>
-{/await}-->
+<h1 class="{heading1}">Receive</h1>
+<h3 class="{heading1}">Send ONLY BSV to this address. 1SatOrdinals and MNEE are currently NOT supported:</h3>
 
 {#await getAddress()}
     <h1 class="{heading1}">Loading...</h1>
-{:then { address, url }}
-        <h1 class="{heading1}">Receive</h1>
-        <h3 class="{heading1}">Send ONLY BSV to this address. 1SatOrdinals and MNEE are currently NOT supported:</h3>
+{:then address}
         <br />
-        <img src={url} alt="QR Code" />
+        <img src={url} alt="QR Code" id="qrcode" />
         <h3 class="{heading3}">{address}</h3>
 {/await}
 
