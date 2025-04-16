@@ -11,7 +11,7 @@ export async function getNextAddress() {
 
     while (true) {
         const address: string = hdWallet.derive(`${basePath}/${nextCheck}`).privKey.toAddress();
-        createSPV(address);
+        await createSPV(address);
         const spv = getSPV(address);
 
         await spv.sync();
@@ -35,7 +35,7 @@ export async function getBSVBalance() {
 
     while (true) {
         const address: string = hdWallet.derive(`${basePath}/${nextCheck}`).privKey.toAddress();
-        createSPV(address);
+        await createSPV(address);
         const spv = getSPV(address);
 
         await spv.sync();

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getNextAddress } from "$lib/addresses";
 	import { heading1, heading3, secondaryButton } from "$lib/classes";
+    //@ts-expect-error
     import QrCode from "qrcode";
 
     async function getAddress(): Promise<string> {
@@ -31,4 +32,5 @@
         <h3 class="{heading3}">{address}</h3>
 {/await}
 
+<br />
 <a href="/wallet" class="{secondaryButton}">Return</a>
