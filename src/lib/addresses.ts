@@ -52,6 +52,17 @@ export async function getBSVBalance() {
     }
 }
 
+async function getBSVPrice(): Promise<number> {
+    return (await (await fetch('https://api.whatsonchain.com/v1/bsv/main/exchangerate')).json()).rate;
+}
+
+export async function getUSDBalance() {
+    const bsvBalance: number = await getBSVBalance();
+    const bsvPrice: number = +(await getBSVPrice()).toFixed(2);
+
+    return (bsvBalance * bsvPrice).toFixed(2);
+}
+
 async function tagCheck(spv: OneSatWebSPV, tag: string): Promise<boolean> {
     return (await spv.search(new TxoLookup(tag, undefined, undefined, undefined, true), undefined, 0)).txos.length > 0;
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { getBSVBalance, getNextAddress } from '$lib/addresses';
+	import { getBSVBalance, getNextAddress, getUSDBalance } from '$lib/addresses';
+	import { heading1, heading3, primaryButton } from '$lib/classes';
 	import { getSpvSynced } from '$lib/runes.svelte';
 	import { onMount } from 'svelte';
 
@@ -13,14 +14,16 @@
 	});
 </script>
 
-{#await getNextAddress()}
-	<p>Next address: Loading...</p>
-{:then address}
-	<p>Next address: {address}</p>
+{#await getBSVBalance()}
+	<h1 class="{heading1}">Loading balance...</h1>
+{:then balance}
+	<h1 class="{heading1}">{balance / Math.pow(10, 8)} BSV</h1>
 {/await}
 
-{#await getBSVBalance()}
-	<p>BSV Balance: Syncronising...</p>
+{#await getUSDBalance()}
+	<h3 class="{heading3}">Loading USD balance...</h3>
 {:then balance}
-	<p>BSV Balance: {balance}</p>
+	<h3 class="{heading3}">${balance} USD</h3>
 {/await}
+
+<a href="/wallet/receive" class="{primaryButton}">Receive</a>
