@@ -20,13 +20,14 @@
 </script>
 
 <h1 class="{heading1}">Receive</h1>
-<h3 class="{heading1}">Send ONLY BSV to this address. 1SatOrdinals and MNEE are currently NOT supported:</h3>
+<h3 class="{heading3}">Send ONLY BSV to this address. 1SatOrdinals and MNEE are currently NOT supported:</h3>
+<br />
+<img src="" alt="QR Code" id="qrcode" />
 
 {#await getAddress()}
     <h1 class="{heading1}">Loading...</h1>
 {:then address}
         <br />
-        <img src={url} alt="QR Code" id="qrcode" />
         <h3 class="{heading3}">{address}</h3>
 {/await}
 
