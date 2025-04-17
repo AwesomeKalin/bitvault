@@ -23,5 +23,5 @@
 </div>
 
 <footer class="fixed bottom-0 left-0 w-full p-4 font-poppins text-sm text-black">
-	<p>Copyright © 2024 Octagon. MIT Licensed</p>
+	<p>Copyright © 2024-2025 BitVault and contributors. MIT Licensed</p>
 </footer>

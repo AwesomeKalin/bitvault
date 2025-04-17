@@ -27,7 +27,6 @@ export async function getNextAddress() {
 }
 
 export async function getBSVBalance() {
-    console.log(getSeed());
     const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
     const basePath: string = "m/44'/236'/0'/0";
     

@@ -30,7 +30,7 @@
 
         setData(newData);
 
-        goto('/wallet');
+        goto('/wallet/sync');
 	}
 </script>
 
