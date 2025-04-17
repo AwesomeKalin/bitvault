@@ -26,4 +26,5 @@
 	<h3 class="{heading3}">${balance} USD</h3>
 {/await}
 
+<br />
 <a href="/wallet/receive" class="{primaryButton}">Receive</a>

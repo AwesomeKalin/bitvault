@@ -3,6 +3,8 @@ import type { WalletData } from "./types";
 import type { OneSatWebSPV } from "spv-store";
 import { createSPV, getSPV } from "./spv-store";
 
+let needSyncCheck: boolean = true;
+
 //@ts-expect-error
 let data: WalletData | undefined = $state(loadData());
 let seed: string = $state('');
@@ -39,18 +41,22 @@ export function setSeed(s: string): void {
 }
 
 export async function getSpvSynced(): Promise<boolean> {
-    const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
-    const address: string = hdWallet.derive("m/44'/236'/0'/0/0").privKey.toAddress();
+    if (needSyncCheck) {
+        const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
+        const address: string = hdWallet.derive("m/44'/236'/0'/0/0").privKey.toAddress();
 
-    let spv: OneSatWebSPV;
-    try {
-        spv = getSPV(address);
-    } catch {
-        createSPV(address);
-        spv = getSPV(address);
+        let spv: OneSatWebSPV;
+        try {
+            spv = getSPV(address);
+        } catch {
+            createSPV(address);
+            spv = getSPV(address);
+        }
+
+        return (await spv.getSyncedBlock())?.height === 0;
+    } else {
+        return true;
     }
-
-    return (await spv.getSyncedBlock())?.height === 0;
 }
 
 export function setSpvSynced(s: boolean): void {

@@ -27,6 +27,7 @@ export async function getNextAddress() {
 }
 
 export async function getBSVBalance() {
+    console.log(getSeed());
     const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
     const basePath: string = "m/44'/236'/0'/0";
     
@@ -57,7 +58,7 @@ async function getBSVPrice(): Promise<number> {
 }
 
 export async function getUSDBalance() {
-    const bsvBalance: number = await getBSVBalance();
+    const bsvBalance: number = await getBSVBalance() / Math.pow(10, 8);
     const bsvPrice: number = +(await getBSVPrice()).toFixed(2);
 
     return (bsvBalance * bsvPrice).toFixed(2);
