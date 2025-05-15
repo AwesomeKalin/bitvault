@@ -17,4 +17,5 @@
 
 <br />
 <a href="/wallet/send" class="{primaryButton}">Send</a>
+<br />
 <a href="/wallet/receive" class="{primaryButton}">Receive</a>

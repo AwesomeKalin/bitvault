@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
 	import { getNextAddress, getTxos, isValidAddress } from "$lib/addresses";
-	import { heading1, heading3, redParagraph, secondaryButton } from "$lib/classes";
+	import { heading1, heading3, primaryButton, redParagraph, secondaryButton } from "$lib/classes";
 	import { P2PKH, PrivateKey, SatoshisPerKilobyte, Transaction } from "@bsv/sdk";
 	import type { Txo } from "spv-store";
 
@@ -75,11 +75,12 @@
 <br />
 <form>
 	<input type="text" placeholder="BSV Address" id="address" />
-	<input type="number" placeholder="Amount (in BSV)" id="amount" />
+    <br />
+	<input type="text" placeholder="Amount (in BSV)" id="amount" />
 	<br />
 	<p class={redParagraph}>{error}</p>
 	<br />
-	<input type="submit" value="Send" onclick={sendTransaction} />
+	<input type="submit" value="Send" onclick={sendTransaction} class="{primaryButton}" />
 </form>
 
 <br />
