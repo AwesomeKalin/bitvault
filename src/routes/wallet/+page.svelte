@@ -16,4 +16,5 @@
 {/await}
 
 <br />
+<a href="/wallet/send" class="{primaryButton}">Send</a>
 <a href="/wallet/receive" class="{primaryButton}">Receive</a>

@@ -1,7 +1,7 @@
-import { HD, Mnemonic } from "@bsv/sdk";
+import { HD, Mnemonic, PrivateKey, Utils } from "@bsv/sdk";
 import { getSeed } from "./runes.svelte";
 import { createSPV, getSPV } from "./spv-store";
-import { OneSatWebSPV, TxoLookup } from "spv-store";
+import { OneSatWebSPV, Txo, TxoLookup } from "spv-store";
 
 export async function getNextAddress() {
     const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
@@ -52,15 +52,68 @@ export async function getBSVBalance() {
     }
 }
 
-async function getBSVPrice(): Promise<number> {
-    return (await (await fetch('https://api.whatsonchain.com/v1/bsv/main/exchangerate')).json()).rate;
-}
-
 export async function getUSDBalance() {
     const bsvBalance: number = await getBSVBalance() / Math.pow(10, 8);
     const bsvPrice: number = +(await getBSVPrice()).toFixed(2);
 
     return (bsvBalance * bsvPrice).toFixed(2);
+}
+
+export function isValidAddress(address: string): boolean {
+    if (address[0] !== '1') return false;
+
+    try {
+        if (Utils.fromBase58Check(address, 'hex').data.length === 40) {
+            return true;
+        }
+        return false;
+    } catch {
+        return false;
+    }
+}
+
+export async function getTxos(valueInSats: number): Promise<false | {
+        txo: Txo;
+        privKey: PrivateKey;
+    }[]> {
+    const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
+    const basePath: string = "m/44'/236'/0'/0";
+
+    let nextCheck: number = 0;
+    let balance: number = 0;
+    const txos: {
+        txo: Txo;
+        privKey: PrivateKey;
+    }[] = [];
+
+    while (true) {
+        const privKey: PrivateKey = hdWallet.derive(`${basePath}/${nextCheck}`).privKey;
+        const address: string = privKey.toAddress();
+        await createSPV(address);
+        const spv = getSPV(address);
+
+        await spv.sync();
+        if (!(await checkIfAddressUsed(spv))) {
+            return false;
+        }
+
+        const txosForWallet = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
+
+        for (let i = 0; i < txos.length; i++) {
+            balance += parseInt(txosForWallet[i].satoshis.toString());
+            txos.push({txo: txosForWallet[i], privKey});
+
+            if (balance >= valueInSats) {
+                return txos;
+            }
+        }
+
+        nextCheck++;
+    }
+}
+
+async function getBSVPrice(): Promise<number> {
+    return (await (await fetch('https://api.whatsonchain.com/v1/bsv/main/exchangerate')).json()).rate;
 }
 
 async function tagCheck(spv: OneSatWebSPV, tag: string): Promise<boolean> {
