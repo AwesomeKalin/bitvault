@@ -98,11 +98,8 @@ export async function getTxos(valueInSats: number): Promise<false | {
 
         await spv.sync();
         if (!(await checkIfAddressUsed(spv))) {
-            console.log('If');
             return false;
         }
-
-        console.log('Not if');
 
         const txosForWallet: Txo[] = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
 
@@ -112,6 +109,8 @@ export async function getTxos(valueInSats: number): Promise<false | {
 
             fees += 108;
             newValueInSats = valueInSats + Math.ceil(fees / 1000);
+            console.log(balance);
+            console.log(newValueInSats);
 
             if (balance >= newValueInSats) {
                 return txos;
