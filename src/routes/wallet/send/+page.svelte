@@ -71,7 +71,12 @@
 
 		await tx.fee(new SatoshisPerKilobyte(1));
 		await tx.sign();
-		await tx.broadcast();
+		
+        await txos[0].spv.broadcast(tx);
+
+        for (var i = 1; i < txos.length; i++) {
+            await txos[i].spv.parseTx(tx);
+        }
 
 		goto('/wallet');
 	}
