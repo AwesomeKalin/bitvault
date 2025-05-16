@@ -35,7 +35,7 @@
         "@types/qrcode": "^1.5.5",
         "eslint": "^9.26.0",
         "eslint-config-prettier": "^10.1.5",
-        "eslint-plugin-svelte": "^3.6.0",
+        "eslint-plugin-svelte": "^3.7.0",
         "globals": "^16.1.0",
         "js-1sat-ord": "^0.1.81",
         "postcss": "^8.5.3",

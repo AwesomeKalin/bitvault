@@ -93,7 +93,7 @@ export async function getTxos(valueInSats: number): Promise<false | {
         const spv = getSPV(address);
 
         await spv.sync();
-        if (!(await checkIfAddressUsed(spv))) {
+        if (await checkIfAddressUsed(spv)) {
             return false;
         }
 
