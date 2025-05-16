@@ -81,6 +81,9 @@ export async function getTxos(valueInSats: number): Promise<false | {
 
     let nextCheck: number = 0;
     let balance: number = 0;
+    let fees: number = 78;
+    let newValueInSats: number = valueInSats + Math.ceil(fees / 1000);
+
     const txos: {
         txo: Txo;
         privKey: PrivateKey;
@@ -93,17 +96,20 @@ export async function getTxos(valueInSats: number): Promise<false | {
         const spv = getSPV(address);
 
         await spv.sync();
-        if (await checkIfAddressUsed(spv)) {
+        if (!(await checkIfAddressUsed(spv))) {
             return false;
         }
 
-        const txosForWallet = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
+        const txosForWallet: Txo[] = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
 
         for (let i = 0; i < txos.length; i++) {
             balance += parseInt(txosForWallet[i].satoshis.toString());
             txos.push({txo: txosForWallet[i], privKey});
 
-            if (balance >= valueInSats) {
+            fees += 108;
+            newValueInSats = valueInSats + Math.ceil(fees / 1000);
+
+            if (balance >= newValueInSats) {
                 return txos;
             }
         }

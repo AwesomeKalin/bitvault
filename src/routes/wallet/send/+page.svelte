@@ -12,7 +12,7 @@
         const amount = (document.getElementById("amount") as HTMLInputElement).value;
         error = ""; // Reset error message
 
-        // Validate the input
+        // Validate the inputs
         if (!address || !amount) {
             error = "Please fill in all fields.";
             return;
@@ -33,6 +33,8 @@
             txo: Txo;
             privKey: PrivateKey;
         }[] = await getTxos(Number(amount) * Math.pow(10, 8));
+
+        console.log(txos);
 
         if (txos === false) {
             error = "Not enough balance.";
