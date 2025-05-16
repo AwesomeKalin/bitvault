@@ -69,8 +69,8 @@
 			return;
 		}
 
-		tx.fee(new SatoshisPerKilobyte(1));
-		tx.sign();
+		await tx.fee(new SatoshisPerKilobyte(1));
+		await tx.sign();
 		await tx.broadcast();
 
 		goto('/wallet');
