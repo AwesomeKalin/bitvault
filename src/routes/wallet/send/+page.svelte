@@ -34,8 +34,6 @@
             privKey: PrivateKey;
         }[] = await getTxos(Number(amount) * Math.pow(10, 8));
 
-        console.log(txos);
-
         if (txos === false) {
             error = "Not enough balance.";
             return;

@@ -92,13 +92,17 @@ export async function getTxos(valueInSats: number): Promise<false | {
     while (true) {
         const privKey: PrivateKey = hdWallet.derive(`${basePath}/${nextCheck}`).privKey;
         const address: string = privKey.toAddress();
+        console.log(address);
         await createSPV(address);
         const spv = getSPV(address);
 
         await spv.sync();
         if (!(await checkIfAddressUsed(spv))) {
+            console.log('If');
             return false;
         }
+
+        console.log('Not if');
 
         const txosForWallet: Txo[] = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
 
