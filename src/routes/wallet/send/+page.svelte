@@ -1,72 +1,80 @@
 <script lang="ts">
-	import { goto } from "$app/navigation";
-	import { getNextAddress, getTxos, isValidAddress } from "$lib/addresses";
-	import { heading1, heading3, primaryButton, redParagraph, secondaryButton } from "$lib/classes";
-	import { P2PKH, PrivateKey, SatoshisPerKilobyte, Transaction } from "@bsv/sdk";
-	import type { Txo } from "spv-store";
+	import { goto } from '$app/navigation';
+	import { getNextAddress, getTxos, isValidAddress } from '$lib/addresses';
+	import { heading1, heading3, primaryButton, redParagraph, secondaryButton } from '$lib/classes';
+	import { P2PKH, PrivateKey, SatoshisPerKilobyte, Transaction } from '@bsv/sdk';
+	import type { OneSatWebSPV, Txo } from 'spv-store';
 
-    let error: string = "";
+	let error: string = '';
 
-    async function sendTransaction() {
-        const address = (document.getElementById("address") as HTMLInputElement).value;
-        const amount = (document.getElementById("amount") as HTMLInputElement).value;
-        error = ""; // Reset error message
+	async function sendTransaction() {
+		const address = (document.getElementById('address') as HTMLInputElement).value;
+		const amount = (document.getElementById('amount') as HTMLInputElement).value;
+		error = ''; // Reset error message
 
-        // Validate the inputs
-        if (!address || !amount) {
-            error = "Please fill in all fields.";
-            return;
-        }
+		// Validate the inputs
+		if (!address || !amount) {
+			error = 'Please fill in all fields.';
+			return;
+		}
 
-        if (isNaN(Number(amount)) || Number(amount) <= 0) {
-            error = "Please enter a valid amount.";
-            return;
-        }
+		if (isNaN(Number(amount)) || Number(amount) <= 0) {
+			error = 'Please enter a valid amount.';
+			return;
+		}
 
-        if (!isValidAddress(address)) {
-            error = "Invalid BSV address.";
-            return;
-        }
+		if (!isValidAddress(address)) {
+			error = 'Invalid BSV address.';
+			return;
+		}
 
-        // Get txos
-        const txos: false | {
-            txo: Txo;
-            privKey: PrivateKey;
-        }[] = await getTxos(Number(amount) * Math.pow(10, 8));
+		// Create transaction
+		const tx = new Transaction();
 
-        if (txos === false) {
-            error = "Not enough balance.";
-            return;
-        }
+		tx.addOutput({
+			lockingScript: new P2PKH().lock(address),
+			satoshis: Number(amount) * Math.pow(10, 8)
+		});
 
-        // Create transaction
-        const tx = new Transaction();
+		tx.addOutput({
+			lockingScript: new P2PKH().lock(await getNextAddress()),
+			change: true
+		});
 
-        for (var i = 0; i < txos.length; i++) {
-            const txo = txos[i].txo;
-            tx.addInput({
-                sourceTXID: txo.outpoint.txid,
-                sourceOutputIndex: txo.outpoint.vout,
-                unlockingScriptTemplate: new P2PKH().unlock(txos[i].privKey),
-            });
-        }
+		// Get txos
+		const txos:
+			| false
+			| {
+					txo: Txo;
+					privKey: PrivateKey;
+					spv: OneSatWebSPV;
+			  }[] = await getTxos(Number(amount) * Math.pow(10, 8), tx.toBinary().length);
 
-        tx.addOutput({
-            lockingScript: new P2PKH().lock(address),
-            satoshis: Number(amount) * Math.pow(10, 8),
-        });
+		if (txos === false) {
+			error = 'Not enough balance.';
+			return;
+		}
 
-        tx.addOutput({
-            lockingScript: new P2PKH().lock(await getNextAddress()),
-            change: true,
-        });
+		try {
+			for (var i = 0; i < txos.length; i++) {
+				const txo = txos[i].txo;
+				tx.addInput({
+					sourceTransaction: await txos[i].spv.getTx(txo.outpoint.txid),
+					sourceOutputIndex: txo.outpoint.vout,
+					unlockingScriptTemplate: new P2PKH().unlock(txos[i].privKey)
+				});
+			}
+		} catch {
+			error = 'Error creating transaction.';
+			return;
+		}
 
-        tx.fee(new SatoshisPerKilobyte(1));
-        tx.sign();
-        await tx.broadcast();
+		tx.fee(new SatoshisPerKilobyte(1));
+		tx.sign();
+		await tx.broadcast();
 
-        goto("/wallet");
-    }
+		goto('/wallet');
+	}
 </script>
 
 <h1 class={heading1}>Send</h1>
@@ -75,12 +83,12 @@
 <br />
 <form>
 	<input type="text" placeholder="BSV Address" id="address" />
-    <br />
+	<br />
 	<input type="text" placeholder="Amount (in BSV)" id="amount" />
 	<br />
 	<p class={redParagraph}>{error}</p>
 	<br />
-	<input type="submit" value="Send" onclick={sendTransaction} class="{primaryButton}" />
+	<input type="submit" value="Send" onclick={sendTransaction} class={primaryButton} />
 </form>
 
 <br />

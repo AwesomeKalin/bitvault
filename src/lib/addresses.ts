@@ -72,21 +72,23 @@ export function isValidAddress(address: string): boolean {
     }
 }
 
-export async function getTxos(valueInSats: number): Promise<false | {
+export async function getTxos(valueInSats: number, origSize: number): Promise<false | {
         txo: Txo;
         privKey: PrivateKey;
+        spv: OneSatWebSPV;
     }[]> {
     const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
     const basePath: string = "m/44'/236'/0'/0";
 
     let nextCheck: number = 0;
     let balance: number = 0;
-    let fees: number = 78;
-    let newValueInSats: number = valueInSats + Math.ceil(fees / 1000);
+    let size: number = origSize;
+    let newValueInSats: number = valueInSats + Math.ceil(size / 1000);
 
     const txos: {
         txo: Txo;
         privKey: PrivateKey;
+        spv: OneSatWebSPV;
     }[] = [];
 
     while (true) {
@@ -104,10 +106,10 @@ export async function getTxos(valueInSats: number): Promise<false | {
 
         for (let i = 0; i < txosForWallet.length; i++) {
             balance += parseInt(txosForWallet[i].satoshis.toString());
-            txos.push({txo: txosForWallet[i], privKey});
+            txos.push({txo: txosForWallet[i], privKey, spv});
 
-            fees += 108;
-            newValueInSats = valueInSats + Math.ceil(fees / 1000);
+            size += 108;
+            newValueInSats = valueInSats + Math.ceil(size / 1000);
 
             if (balance >= newValueInSats) {
                 return txos;
