@@ -92,7 +92,6 @@ export async function getTxos(valueInSats: number): Promise<false | {
     while (true) {
         const privKey: PrivateKey = hdWallet.derive(`${basePath}/${nextCheck}`).privKey;
         const address: string = privKey.toAddress();
-        console.log(address);
         await createSPV(address);
         const spv = getSPV(address);
 
@@ -103,14 +102,12 @@ export async function getTxos(valueInSats: number): Promise<false | {
 
         const txosForWallet: Txo[] = (await spv.search(new TxoLookup('fund'), undefined, 0)).txos;
 
-        for (let i = 0; i < txos.length; i++) {
+        for (let i = 0; i < txosForWallet.length; i++) {
             balance += parseInt(txosForWallet[i].satoshis.toString());
             txos.push({txo: txosForWallet[i], privKey});
 
             fees += 108;
             newValueInSats = valueInSats + Math.ceil(fees / 1000);
-            console.log(balance);
-            console.log(newValueInSats);
 
             if (balance >= newValueInSats) {
                 return txos;
