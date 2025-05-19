@@ -87,9 +87,9 @@
 
 <br />
 <form>
-	<input type="text" placeholder="BSV Address" id="address" />
+	<input type="text" placeholder="BSV Address" id="address" autocomplete="off" />
 	<br />
-	<input type="text" placeholder="Amount (in BSV)" id="amount" />
+	<input type="text" placeholder="Amount (in BSV)" id="amount" autocomplete="off" />
 	<br />
 	<p class={redParagraph}>{error}</p>
 	<br />
