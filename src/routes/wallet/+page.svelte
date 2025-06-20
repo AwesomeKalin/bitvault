@@ -19,4 +19,5 @@
 <div class="space-x-8">
 	<a href="/wallet/send" class={primaryButton}>Send</a>
 	<a href="/wallet/receive" class={primaryButton}>Receive</a>
+	<a href="/wallet/ordinals" class={primaryButton}>Ordinals</a>
 </div>

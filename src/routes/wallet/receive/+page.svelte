@@ -20,7 +20,7 @@
 </script>
 
 <h1 class="{heading1}">Receive</h1>
-<h3 class="{heading3}">Send ONLY BSV to this address. 1SatOrdinals and MNEE are currently NOT supported:</h3>
+<h3 class="{heading3}">Send ONLY BSV and 1SatOrdinals to this address. BSV20/21 and MNEE are currently NOT supported:</h3>
 <br />
 <img src="" alt="QR Code" id="qrcode" />
 

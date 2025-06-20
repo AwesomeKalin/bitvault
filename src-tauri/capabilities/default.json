@@ -23,6 +23,9 @@
         },
         {
           "url": "https://*.taal.com"
+        },
+        {
+          "url": "https://ordfs.network"
         }
       ]
     }

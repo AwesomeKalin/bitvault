@@ -1,7 +1,7 @@
 import { HD, Mnemonic, PrivateKey, Utils } from "@bsv/sdk";
 import { getSeed } from "./runes.svelte";
 import { createSPV, getSPV } from "./spv-store";
-import { OneSatWebSPV, Txo, TxoLookup } from "spv-store";
+import { OneSatWebSPV, Txo, TxoLookup, TxoSort } from "spv-store";
 
 export async function getNextAddress() {
     const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
@@ -115,6 +115,31 @@ export async function getTxos(valueInSats: number, origSize: number): Promise<fa
                 return txos;
             }
         }
+
+        nextCheck++;
+    }
+}
+
+export async function getOrdinals(from: string): Promise<Txo[]> {
+    const hdWallet: HD = HD.fromSeed(new Mnemonic(getSeed()).toSeed());
+    const basePath: string = "m/44'/236'/0'/0";
+
+    let nextCheck: number = 0;
+    const ordinals: Txo[] = [];
+
+    while (true) {
+        const address: string = hdWallet.derive(`${basePath}/${nextCheck}`).privKey.toAddress();
+        await createSPV(address);
+        const spv = getSPV(address);
+
+        await spv.sync();
+
+        if (!(await checkIfAddressUsed(spv))) {
+            return ordinals.filter((o) => o.data.origin?.data?.insc?.file?.type !== 'application/bsv-20');
+        }
+
+        const txos: Txo[] = (await spv.search(new TxoLookup('origin'), TxoSort.DESC, 40, from)).txos;
+        ordinals.push(...txos);
 
         nextCheck++;
     }
