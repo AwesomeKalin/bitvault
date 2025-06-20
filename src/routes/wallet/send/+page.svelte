@@ -4,6 +4,7 @@
 	import { heading1, heading3, primaryButton, redParagraph, secondaryButton } from '$lib/classes';
 	import { P2PKH, PrivateKey, SatoshisPerKilobyte, Transaction } from '@bsv/sdk';
 	import type { OneSatWebSPV, Txo } from 'spv-store';
+	import { tick } from 'svelte';
 
 	let error: string = '';
 
@@ -78,7 +79,16 @@
             await txos[i].spv.parseTx(tx);
         }
 
+		await tick();
 		goto('/wallet');
+	}
+
+	function preventDefault(fn: { (): Promise<void>; call?: any; }) {
+		return function (event: { preventDefault: () => void; }) {
+			event.preventDefault();
+            //@ts-expect-error
+			fn.call(this, event);
+		};
 	}
 </script>
 
@@ -93,7 +103,7 @@
 	<br />
 	<p class={redParagraph}>{error}</p>
 	<br />
-	<input type="submit" value="Send" onclick={sendTransaction} class={primaryButton} />
+	<input type="submit" value="Send" onclick={preventDefault(sendTransaction)} class={primaryButton} />
 </form>
 
 <br />

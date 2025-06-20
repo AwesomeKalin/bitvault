@@ -2,18 +2,6 @@
 	import { getData } from '$lib/runes.svelte';
 	import '../app.css';
 	let { children } = $props();
-
-	$effect(() => {
-		const data = getData();
-		if (data === undefined) {
-			return;
-		}
-
-		localStorage.setItem('seed', data.seed);
-		localStorage.setItem('xpub', data.xpub);
-		localStorage.setItem('salt', data.salt);
-		localStorage.setItem('iv', data.iv);
-	});
 </script>
 
 <div class="bg-stone-100">

@@ -30,6 +30,14 @@ export function getData(): WalletData | undefined {
 
 export function setData(d: WalletData | undefined): void {
     data = d;
+    //@ts-expect-error
+    localStorage.setItem('seed', d.seed);
+    //@ts-expect-error
+	localStorage.setItem('xpub', d.xpub);
+    //@ts-expect-error
+	localStorage.setItem('salt', d.salt);
+    //@ts-expect-error
+	localStorage.setItem('iv', d.iv);
 }
 
 export function getSeed(): string {

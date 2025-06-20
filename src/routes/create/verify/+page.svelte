@@ -3,11 +3,14 @@
 	import { heading1, heading3, paragraph, primaryButton, secondaryButton } from '$lib/classes';
 	import { getData } from '$lib/runes.svelte';
 	import type { WalletData } from '$lib/types';
+	import { tick } from 'svelte';
 
 	let wrongSeed: boolean = $state(false);
 	let error: boolean = $state(false);
 
-	function confirmSeed() {
+	let seed: string = $state('');
+
+	async function confirmSeed() {
 		wrongSeed = false;
 		error = false;
 		const data: WalletData | undefined = getData();
@@ -16,12 +19,21 @@
 			return;
 		}
 
-        //@ts-expect-error
-		if (data.seed === document.getElementById('confirmseed')?.value) {
+		await tick();
+
+		if (data.seed === seed) {
 			goto('/create/encrypt');
 		}
 
 		wrongSeed = true;
+	}
+
+	function preventDefault(fn: { (): Promise<void>; call?: any }) {
+		return function (event: { preventDefault: () => void }) {
+			event.preventDefault();
+			//@ts-expect-error
+			fn.call(this, event);
+		};
 	}
 </script>
 
@@ -30,19 +42,21 @@
 	Let's confirm you have saved the mnemonic! Please write your mnemonic below.
 </h3>
 <br />
-<textarea id="confirmseed" class="text-sm resize-none"></textarea>
-<br />
-{#if error}
-	<p class="{paragraph} text-red-600">Unknown error</p>
-    <br />
-{/if}
+<form onsubmit={preventDefault(confirmSeed)}>
+	<textarea id="confirmseed" class="resize-none text-sm" bind:value={seed}></textarea>
+	<br />
+	{#if error}
+		<p class="{paragraph} text-red-600">Unknown error</p>
+		<br />
+	{/if}
 
-{#if wrongSeed}
-	<p class="{paragraph} text-red-600">Incorrect Seed</p>
-    <br />
-{/if}
+	{#if wrongSeed}
+		<p class="{paragraph} text-red-600">Incorrect Seed</p>
+		<br />
+	{/if}
 
-<div class="space-x-8">
-	<button class={primaryButton} onclick={confirmSeed}>Confirm Mnemonic</button>
-	<a href="/create/new" class={secondaryButton}>I didn't save it, give me a new one!</a>
-</div>
+	<div class="space-x-8">
+		<button class={primaryButton}>Confirm Mnemonic</button>
+		<a href="/create/new" class={secondaryButton}>I didn't save it, give me a new one!</a>
+	</div>
+</form>
